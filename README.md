@@ -76,7 +76,7 @@ PCMFlowBluetooth never starts or stops the Bluetooth stack — the sketch owns t
 ## Dependencies
 
 - [PCMFlow](https://github.com/tanakamasayuki/PCMFlow) ≥ 0.2.1 — required.
-- [EspBle](https://github.com/tanakamasayuki/EspBle) — required for `EspBleA2dpSinkAdapter` (ESP32 only). The rest of the library builds without it.
+- [EspBle](https://github.com/tanakamasayuki/EspBle) — required for `EspBleA2dpSinkAdapter` (ESP32 only). The rest of the library builds without it. EspBle publishes no `library.json`, so it is declared in `library.properties` only; PlatformIO users install it from its repository.
 
 > **EspBle's Classic Bluetooth support is not in a published release yet.** `EspBleA2dpSinkAdapter` is declared only when `<EspBleClassic.h>` is present, so with a stock EspBle install it does not exist and `PCMFLOWBLUETOOTH_HAS_ESPBLE_ADAPTER` is 0. Until a release ships it, clone [EspBle](https://github.com/tanakamasayuki/EspBle) next to this repository — that is what the examples' `sketch.yaml` expects.
 

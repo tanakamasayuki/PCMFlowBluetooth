@@ -26,9 +26,14 @@ reset	KEYWORD2
 resetCounters	KEYWORD2
 pushEncoded	KEYWORD2
 setCodecConfig	KEYWORD2
+codecConfig	KEYWORD2
 decodeFrame	KEYWORD2
+maxPcmFramesPerSbcFrame	KEYWORD2
+streamChannels	KEYWORD2
 stream	KEYWORD2
+config	KEYWORD2
 format	KEYWORD2
+hasFormat	KEYWORD2
 readFrames	KEYWORD2
 availableFrames	KEYWORD2
 isReady	KEYWORD2
@@ -36,11 +41,13 @@ isEof	KEYWORD2
 connected	KEYWORD2
 streaming	KEYWORD2
 receivedPacketCount	KEYWORD2
+decodedFrameCount	KEYWORD2
 droppedPacketCount	KEYWORD2
 invalidFrameCount	KEYWORD2
 decodeFailureCount	KEYWORD2
 pcmOverflowFrameCount	KEYWORD2
 timestampDiscontinuityCount	KEYWORD2
+foreignConnectionPacketCount	KEYWORD2
 lastError	KEYWORD2
 lastErrorName	KEYWORD2
 

@@ -11,3 +11,7 @@
 - (JA) `reset()`回帰試験を拡張し、新規確保したdecoderとchannel数再設定後の状態をreset基準と比較するようにした。reset同士の比較だけでは未初期化scratch領域を検出できないため。
 - (EN) Added the A2DP validation report (docs/A2DP_VALIDATION_REPORT.md / .ja.md) and documented `ConcurrentUpdate` as a defensive path with no automated refusal test.
 - (JA) A2DP検証レポート(docs/A2DP_VALIDATION_REPORT.md / .ja.md)を追加し、`ConcurrentUpdate`が自動テストを持たない防御的経路であることを明記。
+- (EN) Ran every suite on the real ESP32 profile and recorded the measured footprints in SPEC §9.
+- (JA) 全suiteを実機ESP32プロファイルで実行し、実測フットプリントをSPEC §9に記録。
+- (EN) The smoke test now asserts the adapter guard's implication (SPEC §13.1) instead of only printing it, and keywords.txt covers the remaining counters.
+- (JA) smokeテストがadapterガードの含意(SPEC §13.1)を出力するだけでなく検証するようにし、keywords.txtに残っていたカウンタを追加。

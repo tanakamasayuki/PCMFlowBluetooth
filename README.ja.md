@@ -76,7 +76,7 @@ PCMFlowBluetooth が Bluetooth スタックを起動・停止することはな�
 ## 依存
 
 - [PCMFlow](https://github.com/tanakamasayuki/PCMFlow) ≥ 0.2.1 — 必須。
-- [EspBle](https://github.com/tanakamasayuki/EspBle) — `EspBleA2dpSinkAdapter`(ESP32 のみ)に必要。それ以外の部分は EspBle なしでビルドできる。
+- [EspBle](https://github.com/tanakamasayuki/EspBle) — `EspBleA2dpSinkAdapter`(ESP32 のみ)に必要。それ以外の部分は EspBle なしでビルドできる。EspBle は `library.json` を公開していないため、宣言は `library.properties` のみ。PlatformIO ではリポジトリから直接導入する。
 
 > **EspBle の Classic Bluetooth 対応はまだリリースに入っていない。** `EspBleA2dpSinkAdapter` は `<EspBleClassic.h>` がある場合にのみ宣言されるため、素の EspBle をインストールした環境では存在せず、`PCMFLOWBLUETOOTH_HAS_ESPBLE_ADAPTER` は 0 になる。リリースされるまでは [EspBle](https://github.com/tanakamasayuki/EspBle) をこのリポジトリの隣に clone すること(サンプルの `sketch.yaml` はそれを前提にしている)。
 

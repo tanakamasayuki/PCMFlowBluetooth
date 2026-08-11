@@ -1,4 +1,4 @@
-"""Shared pytest hooks for PCMFlowOpus tests.
+"""Shared pytest hooks for PCMFlowBluetooth tests.
 
 Mirrors the parent PCMFlow `tests/conftest.py` — wipes the per-test
 `output/` directory before each test so host-profile artifacts don't

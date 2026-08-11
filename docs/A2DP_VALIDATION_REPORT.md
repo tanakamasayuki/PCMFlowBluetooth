@@ -55,6 +55,8 @@ The peak of 32768 that surfaces there is the same saturated value the request ob
 | `a2dp_sink_stream/` | pass |
 | `external_source/` | pass |
 
+The same five suites also pass on a real ESP32 (`--profile esp32`, `5 passed in 166.58s`), which is what pins the decoder on a 32-bit target — `sbc_decoder` reports `TEST done 157/157` there too. Footprints measured from those images are recorded in [SPEC §9](../SPEC.md).
+
 ## 3. Two-board ESP32 end-to-end results
 
 [tests/peer/a2dp_sbc_receive/](../tests/peer/a2dp_sbc_receive/) was added. DUT = `EspBleClassicA2dpSink` + `EspBleA2dpSinkAdapter`, peer = `EspBleClassicA2dpSource`. Both build with `ESPBLE_CLASSIC_ONLY` + `ESPBLE_CLASSIC_CUSTOM_HOST` and reference EspBle and PCMFlowBluetooth as local directories.

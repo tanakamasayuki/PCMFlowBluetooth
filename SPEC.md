@@ -313,6 +313,15 @@ SBC joint stereo and dual channel both decode to 2-channel interleaved PCM. Neit
 | Heap allocation | `begin()` only; zero steady-state allocation |
 | Decode time | to be measured and recorded; never executed on the Bluetooth callback task |
 
+Measured on the `esp32` test profile (arduino-esp32 3.3.11, plain ESP32, 2026-08-12), as build deltas against the `smoke` image (269,296 byte flash / 22,116 byte RAM), which is the Arduino core plus this library's headers:
+
+| Test image | Flash delta | RAM delta | Contents |
+|---|---|---|---|
+| `sbc_decoder` | +23,116 byte | +1,656 byte | SBC decoder, the vendored codec, and the embedded test vectors |
+| `a2dp_sink_stream` | +35,924 byte | +1,792 byte | the above plus the queue, the stream and PCMFlow's ring buffer |
+
+These are test images, not a library footprint: they carry the vectors and the assertion scaffolding. They bound the real cost from above.
+
 The defaults are finalized after the measurements listed in §15. Only the numbers change — never the public API.
 
 ## 10. Repository layout

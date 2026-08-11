@@ -19,6 +19,7 @@
   "dependencies": [
     {
       "name": "PCMFlow",
+      "owner": "tanakamasayuki",
       "version": ">=0.2.1"
     }
   ],

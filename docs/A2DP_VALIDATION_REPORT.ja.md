@@ -55,6 +55,8 @@ TEST done 155/157
 | `a2dp_sink_stream/` | pass |
 | `external_source/` | pass |
 
+同じ5 suite は実機 ESP32(`--profile esp32`)でも通過(`5 passed in 166.58s`)。32-bit ターゲットでの decoder 挙動はここで担保しており、`sbc_decoder` は実機でも `TEST done 157/157`。フットプリント実測値は [SPEC §9](../SPEC.md) に記録した。
+
 ## 3. 無印ESP32 2台E2E の結果
 
 [tests/peer/a2dp_sbc_receive/](../tests/peer/a2dp_sbc_receive/) を追加。DUT = `EspBleClassicA2dpSink` + `EspBleA2dpSinkAdapter`、peer = `EspBleClassicA2dpSource`。両者とも `ESPBLE_CLASSIC_ONLY` + `ESPBLE_CLASSIC_CUSTOM_HOST` でビルドし、EspBle と PCMFlowBluetooth の双方を local directory 指定で参照する。
