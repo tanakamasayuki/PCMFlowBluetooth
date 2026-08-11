@@ -26,12 +26,14 @@ SbcDecoder              EspBle 非依存。SBC フレーム → PCM。
 
 ## ディレクトリ構成
 
-- `smoke/` — ビルドとハーネス配線の確認。アンブレラヘッダをコンパイルし、バージョンを表示する。*(実装済み)*
-- *(予定)* `sbc_decoder/` — 既知 SBC ベクタ、mono/dual/stereo/joint stereo、16/32/44.1/48 kHz、bitpool 範囲、不正フレームの拒否と再同期、`reset()`。
-- *(予定)* `encoded_queue/` — パケット単位の atomic 格納、部分パケット禁止、溢れ時の全体 drop、リングのラップ、`mediaMtu` 1 個分の下限。
-- *(予定)* `a2dp_sink_stream/` — 複数フレームパケットの反復、コーデック再設定での旧データ破棄、PCM 溢れポリシー、全カウンタ、`isEof()` が常に false。
-- *(予定)* `external_source/` — `PCMFlow::setInputSource()` → `pump()` → `readFrames()` の統合。
+- `smoke/` — ビルドとハーネス配線の確認。アンブレラヘッダをコンパイルし、バージョンを表示する。
+- `encoded_queue/` — パケット単位の atomic 格納、部分パケット禁止、溢れ時の全体 drop、リングのラップ、`mediaMtu` 1 個分の下限。
+- `sbc_decoder/` — 既知 SBC ベクタ、mono/dual/stereo/joint stereo、16/32/44.1/48 kHz、bitpool 範囲、不正フレームの拒否と再同期、`reset()`。
+- `a2dp_sink_stream/` — 複数フレームパケットの反復、コーデック再設定での旧データ破棄、PCM 溢れポリシー、全カウンタ、`isEof()` が常に false。
+- `external_source/` — `PCMFlow::setInputSource()` → `pump()` → `readFrames()` の統合。
 - *(予定)* `peer/a2dp_sbc_receive/` — 実機 2 台での A2DP。接続、コーデック設定、連続 SBC 受信、PCM デコード、suspend/resume、切断、再接続。
+
+`sbc_decoder/input/sbc_vectors.h` は `tools/gen_sbc_vectors.py` の生成物で、`a2dp_sink_stream/` と `external_source/` も共有している。これらのスイートはスタブではなく実際のエンコード済み音声に対してキューイングと配線を検証している。
 
 ## SBC テストベクタ
 

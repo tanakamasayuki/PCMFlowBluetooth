@@ -501,7 +501,9 @@ mSBC frameを1個ずつ、audio connectionの`preferredFrameSize`に一致する
 
 NBS/CVSDは8 kHz、mono、signed 16-bit PCMとする。CVSDのencode/decode backendとlicenseが確定するまでclassは
 `UnsupportedCodec`を返して開始を拒否し、mSBCへ偽装fallbackしない。CVSDのpacket長は固定値を仮定せず、
-`preferredFrameSize`と受信view境界を使う。
+`preferredFrameSize`と受信view境界を使う。EspBleのAGは`preferredAudioCodec=Cvsd`で標準codec negotiationを
+選択でき、ESP32同士の実機probeでは両roleとも`preferredFrameSize=120`、120-byte受信viewだった。SCOを切断し
+同一call中に再接続した場合もcodecとframe sizeを接続eventから取り直す。120 byteは観測値であり固定定数にしない。
 
 `send()`の`Accepted`はBluedroidへbuffer ownershipが移ったことだけを示し、controller送信完了を意味しない。
 `WouldBlock`は現状local allocation failureである。uplinkは`Accepted`時だけPCM/frameを消費し、`WouldBlock`では

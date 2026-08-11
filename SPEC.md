@@ -508,7 +508,11 @@ negotiated preferred frame size.
 NBS/CVSD is 8-kHz mono signed 16-bit PCM. Until a CVSD backend and its license are
 settled, the classes reject it with `UnsupportedCodec`; they never disguise mSBC
 as a fallback. CVSD packet size follows the negotiated preferred frame size and
-received view boundaries instead of a hard-coded length.
+received view boundaries instead of a hard-coded length. EspBle's AG selects the
+standard negotiation with `preferredAudioCodec=Cvsd`; an ESP32-to-ESP32 probe
+reported `preferredFrameSize=120` and 120-byte receive views on both roles, also
+after disconnecting and reconnecting SCO within the same call. That size is an
+observation, not a constant.
 
 `send()` returning `Accepted` means only that Bluedroid took buffer ownership,
 not that the controller transmitted it. `WouldBlock` currently means local
