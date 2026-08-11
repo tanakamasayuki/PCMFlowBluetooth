@@ -107,3 +107,7 @@ The Bluetooth® word mark and logos are registered trademarks owned by Bluetooth
 ## Tests
 
 See [tests/README.md](tests/README.md).
+
+## Reports
+
+- [docs/A2DP_VALIDATION_REPORT.md](docs/A2DP_VALIDATION_REPORT.md) — A2DP Sink validation on two ESP32 boards: the decoder-reset fix, host and hardware results, observed transport values.

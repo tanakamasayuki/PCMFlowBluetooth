@@ -281,6 +281,7 @@ Two ESP32-D0WD-V3 devices, Arduino-ESP32 3.3.11, custom ESP-IDF v5.5.5 Bluedroid
 - Counters are monotonically increasing `uint32_t` values that are allowed to wrap; `resetCounters()` is provided separately.
 - Callback removal, `end()` and the destructor carry a lifetime barrier that rules out use-after-free.
 - **User callbacks are never invoked while an internal lock is held.**
+- `ConcurrentUpdate` is a defensive path: it is reachable only by a caller that already violates the single-consumer rule. No automated test asserts the refusal, because a race that has to be lost to be observed makes for a flaky test. The tests assert instead that the guard is always released.
 
 ## 7. Buffering and load control
 

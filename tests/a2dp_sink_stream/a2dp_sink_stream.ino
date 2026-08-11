@@ -411,12 +411,14 @@ static void test_timestamp_discontinuity()
 }
 
 // update() is single-consumer, guarded by an atomic flag. Genuine
-// concurrency is NOT covered here: the two profiles have no common threading
-// primitive, and this suite deliberately runs the same source on both. What
-// is covered is that the guard is released, so repeated calls keep working —
-// a guard that leaked would show up as the stream silently going deaf after
-// one update(). The refusal path itself is exercised on hardware, in
-// tests/peer/, where a second task is available.
+// concurrency is NOT covered anywhere in the suite: the two profiles have no
+// common threading primitive, this suite deliberately runs the same source on
+// both, and a race that has to be lost to be observed makes for a flaky test.
+// The ConcurrentUpdate refusal is therefore a defensive path that only a
+// caller violating the single-consumer rule can reach (SPEC §6); it is
+// documented, not asserted. What IS covered is that the guard is released, so
+// repeated calls keep working — a guard that leaked would show up as the
+// stream silently going deaf after one update().
 static void test_update_guard_is_released()
 {
     const SbcVector &v = stereo48k();

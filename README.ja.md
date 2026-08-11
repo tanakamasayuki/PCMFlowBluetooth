@@ -107,3 +107,7 @@ Bluetooth® のワードマークとロゴは Bluetooth SIG, Inc. の登録商�
 ## テスト
 
 [tests/README.ja.md](tests/README.ja.md) を参照。
+
+## レポート
+
+- [docs/A2DP_VALIDATION_REPORT.ja.md](docs/A2DP_VALIDATION_REPORT.ja.md) — 無印ESP32 2台による A2DP Sink 検証。decoder reset 修正、host / 実機の結果、観測した transport 値。
