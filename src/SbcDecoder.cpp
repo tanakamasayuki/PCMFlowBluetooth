@@ -69,6 +69,12 @@ void SbcDecoder::reset(uint8_t pcmChannels)
     pcmStride_ = (pcmChannels == 1) ? 1 : 2;
 
     memset(&context_, 0, sizeof(context_));
+    // OI_CODEC_SBC_DecoderReset() only rebuilds pointers into decoderData_;
+    // it does not clear the synthesis filter buffers stored there. Leaving
+    // them intact leaks PCM history across suspend/resume (and malloc's
+    // initial contents into the first stream), producing a different startup
+    // transient for the same SBC input after every reset.
+    memset(decoderData_, 0, decoderDataBytes_);
     format_ = PCMFormat();
     streamChannels_ = 0;
 

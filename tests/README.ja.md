@@ -31,7 +31,7 @@ SbcDecoder              EspBle 非依存。SBC フレーム → PCM。
 - `sbc_decoder/` — 既知 SBC ベクタ、mono/dual/stereo/joint stereo、16/32/44.1/48 kHz、bitpool 範囲、不正フレームの拒否と再同期、`reset()`。
 - `a2dp_sink_stream/` — 複数フレームパケットの反復、コーデック再設定での旧データ破棄、PCM 溢れポリシー、全カウンタ、`isEof()` が常に false。
 - `external_source/` — `PCMFlow::setInputSource()` → `pump()` → `readFrames()` の統合。
-- *(予定)* `peer/a2dp_sbc_receive/` — 実機 2 台での A2DP。接続、コーデック設定、連続 SBC 受信、PCM デコード、suspend/resume、切断、再接続。
+- `peer/a2dp_sbc_receive/` — 無印ESP32 2台で、EspBle A2DP Sourceから既知SBCベクタを無線送信し、PCMFlowBluetoothのSink adapterでPCMへ復号する実機E2E。PCM形式、フレーム数、信号ピーク、サンプルハッシュ、drop/decode/overflowに加え、suspend/resumeと切断/再接続を検証する。
 
 `sbc_decoder/input/sbc_vectors.h` は `tools/gen_sbc_vectors.py` の生成物で、`a2dp_sink_stream/` と `external_source/` も共有している。これらのスイートはスタブではなく実際のエンコード済み音声に対してキューイングと配線を検証している。
 
@@ -39,7 +39,7 @@ SbcDecoder              EspBle 非依存。SBC フレーム → PCM。
 
 `tools/gen_sbc_vectors.py` が、vendor した Broadcom SBC エンコーダを**ホストでビルド**して、既知 PCM と対になる SBC フレームを生成する。エンコーダをホスト専用にビルドすることで、arduino-esp32 の `libbt.a` が既に公開している `OI_CODEC_SBC_*` / `SBC_Encoder` シンボルと衝突しない([SPEC §11.3](../SPEC.ja.md))。
 
-`peer/a2dp_sbc_receive/` の peer 側は、実時間エンコードではなく**事前生成した SBC フレームを PROGMEM に埋め込んで** `EspBleClassicA2dpSource::send()` から送る。決定論的なので、DUT 側の PCM を厳密に検証できる。
+`peer/a2dp_sbc_receive/` の peer 側は、実時間エンコードではなく**事前生成したread-only SBCベクタをテストイメージへ埋め込み** `EspBleClassicA2dpSource::send()` から送る。決定論的なので、resumeと再接続を跨いだDUT側PCMを厳密に検証できる。
 
 ## 実機 2 台の構成
 

@@ -49,6 +49,7 @@ struct DecodeResult
     bool sawFailure = false;
     long peak = 0;
     long zeroCrossings = 0;     // on the left channel
+    uint32_t hash = 2166136261UL;
 };
 
 static DecodeResult decode_all(SbcDecoder &dec, const SbcVector &v)
@@ -83,6 +84,13 @@ static DecodeResult decode_all(SbcDecoder &dec, const SbcVector &v)
             if (havePrevious && ((previous < 0) != (left < 0))) ++r.zeroCrossings;
             previous = left;
             havePrevious = true;
+            for (uint8_t channel = 0; channel < channels; ++channel) {
+                const uint16_t sample = static_cast<uint16_t>(g_pcm[i * channels + channel]);
+                r.hash ^= static_cast<uint8_t>(sample);
+                r.hash *= 16777619UL;
+                r.hash ^= static_cast<uint8_t>(sample >> 8);
+                r.hash *= 16777619UL;
+            }
         }
     }
     return r;
@@ -278,6 +286,7 @@ static void test_reset_restores_state()
     EXPECT_EQ("reset-same-pcm", first.pcmFrames, second.pcmFrames);
     EXPECT_EQ("reset-same-peak", first.peak, second.peak);
     EXPECT_EQ("reset-same-crossings", first.zeroCrossings, second.zeroCrossings);
+    EXPECT_EQ("reset-same-samples", first.hash, second.hash);
 
     // Without a reset in between, the filter history carries over, so the
     // decoder is not expected to reproduce the startup transient. It must

@@ -261,8 +261,11 @@ ESP32-D0WD-V3 同士、Arduino-ESP32 3.3.11、独自 ESP-IDF v5.5.5 Bluedroid �
 | timestamp | Source 設定値 1000、1128、1256… を Sink で同値のまま観測 |
 | イベント順序 | コーデック設定通知が接続通知より先に届くケースを観測 |
 | ライフサイクル | Started → メディア → Suspended → Disconnected まで確認 |
+| 実SBC E2E | 944 byteの1パケットにSBC 8フレームを格納し、1バースト8パケットからstereo PCM 8,192フレームを復号 |
+| 再開再現性 | suspend前、resume後、切断/再接続後の同一バーストがすべてPCM hash `e511d892`で一致 |
+| 復号健全性 | 3バースト/24パケットでdrop、不正フレーム、decode failure、PCM overflow、別接続packetがすべて0 |
 
-13 byte / 1 frame はトランスポート境界のプローブ値であり、実運用上限ではない。**キューは少なくとも `mediaMtu` 1 個分をアトミックに格納できること**を下限とする。複数フレームパケットと最大 payload 長は実 SBC Source で追加測定する(§15)。
+13 byte / 1 frame はトランスポート境界のプローブ値であり、実運用上限ではない。PCMFlowBluetoothの実機2台fixtureでは、MTU 995 byteに対して実SBC 944 byte/8フレームのpayloadも検証した。**キューは少なくとも `mediaMtu` 1 個分をアトミックに格納できること**を引き続き下限とする。
 
 ## 6. スレッドとコールバック
 
@@ -427,8 +430,6 @@ Arduino のライブラリ形式ではインクルードパスに `<library>/src
 
 1 箇所だけ別扱いが要る。デコーダの一部が **角括弧**インクルード(`#include <oi_codec_sbc_private.h>`)でディレクトリを跨いでおり、角括弧はインクルード元自身のディレクトリを見ないため、隣に置いた shim では捕まえられない。これらは `src/` 直下に shim を置く — Arduino がインクルードパスに入れる唯一のディレクトリだからである。`sync_sbc.py` が生成・マーキングし、参照されなくなれば削除する。現時点では `src/oi_codec_sbc_private.h` の 1 個だけ。
 
-現行スナップショットは **verbatim 44 ファイル + 生成 shim 16 ファイル**である。
-
 ### 11.5 上流追従方針
 
 **L0 — 自動追従なし。** OI SBC デコーダは 2006 年由来で AOSP / ESP-IDF のいずれでも実質的に凍結している。`tools/sync_sbc.py` は保守者ツールであり、CI からは呼ばない。`src/external/UPSTREAM.lock` に ESP-IDF のコミット SHA と取得日を記録する。更新はライセンス、ABI、品質、実機回帰を伴う明示的な作業とする。
@@ -458,7 +459,7 @@ Arduino のライブラリ形式ではインクルードパスに `<library>/src
 
 **SBC テストベクタ**は `tools/gen_sbc_vectors.py` が生成する(vendor した Broadcom エンコーダをホストでビルドして SBC フレームを作り、既知 PCM との対応を固定する)。この用途ではエンコーダをホストでのみビルドするので、`libbt.a` との衝突は起きない。
 
-`tests/peer/a2dp_sbc_receive/` の peer 側は、**事前生成した SBC フレームを PROGMEM に埋め込んで** `EspBleClassicA2dpSource::send()` から送る。ESP32 上で実時間エンコードするより決定論的で、DUT 側の PCM を厳密に検証できる。
+`tests/peer/a2dp_sbc_receive/` の peer 側は、**事前生成したread-only SBCベクタをテストイメージへ埋め込み** `EspBleClassicA2dpSource::send()` から送る。ESP32 上で実時間エンコードするより決定論的で、resumeと再接続を跨いだサンプルhashまで厳密に検証できる。
 
 ### 13.1 完了条件
 

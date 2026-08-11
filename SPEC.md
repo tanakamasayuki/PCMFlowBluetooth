@@ -261,8 +261,11 @@ Two ESP32-D0WD-V3 devices, Arduino-ESP32 3.3.11, custom ESP-IDF v5.5.5 Bluedroid
 | Timestamp | Source values 1000, 1128, 1256… observed unchanged at the Sink |
 | Event ordering | codec-configured observed arriving before connected |
 | Lifecycle | Started → media → Suspended → Disconnected all confirmed |
+| Real SBC E2E | one 944-byte packet carries 8 SBC frames; 8 packets per burst decode to 8,192 stereo PCM frames |
+| Restart repeatability | the identical burst produced PCM hash `e511d892` before suspend, after resume, and after disconnect/reconnect |
+| Decode health | 3 bursts / 24 packets completed with no packet drop, invalid frame, decode failure, PCM overflow or foreign-connection packet |
 
-13 byte / 1 frame is a transport-boundary probe value, not an operational limit. The queue's lower bound is that it **must hold one `mediaMtu` worth of payload atomically**. Real multi-frame packets and the maximum payload length are to be measured against a real SBC Source (§15).
+13 byte / 1 frame is a transport-boundary probe value, not an operational limit. The PCMFlowBluetooth two-board fixture additionally verifies a real 944-byte, 8-frame SBC payload against the 995-byte MTU. The queue's lower bound remains that it **must hold one `mediaMtu` worth of payload atomically**.
 
 ## 6. Threads and callbacks
 
@@ -427,8 +430,6 @@ The fix is **the same approach PCMFlowOpus uses**: `tools/sync_sbc.py` generates
 
 One case needs different handling. A few decoder sources reach across directories with an **angle** include (`#include <oi_codec_sbc_private.h>`), and an angle include never consults the including file's own directory, so a neighbouring shim cannot catch it. Those get a shim at `src/` instead — the one directory Arduino does place on the include path. `sync_sbc.py` generates it, marks it, and removes it again when it is no longer referenced. Currently there is exactly one: `src/oi_codec_sbc_private.h`.
 
-The current snapshot is **44 verbatim files plus 16 generated shims**.
-
 ### 11.5 Upstream-tracking posture
 
 **L0 — no automatic tracking.** The OI SBC decoder dates from 2006 and is effectively frozen in both AOSP and ESP-IDF. `tools/sync_sbc.py` is a maintainer tool and is never invoked from CI. `src/external/UPSTREAM.lock` records the ESP-IDF commit SHA and the sync date. Updates are explicit work accompanied by license, ABI, quality and on-hardware regression checks.
@@ -458,7 +459,7 @@ Same conventions as the sibling libraries:
 
 **SBC test vectors** are produced by `tools/gen_sbc_vectors.py`, which builds the vendored Broadcom encoder on the host to generate SBC frames paired with known PCM. Building the encoder for the host only means no collision with `libbt.a`.
 
-The peer side of `tests/peer/a2dp_sbc_receive/` sends **pre-generated SBC frames embedded in PROGMEM** through `EspBleClassicA2dpSource::send()`. That is more deterministic than encoding in real time on the ESP32 and lets the DUT-side PCM be checked strictly.
+The peer side of `tests/peer/a2dp_sbc_receive/` sends a **pre-generated read-only SBC vector embedded in the test image** through `EspBleClassicA2dpSource::send()`. That is more deterministic than encoding in real time on the ESP32 and lets the DUT-side PCM be checked strictly, including sample hashing across resume and reconnect.
 
 ### 13.1 Definition of done
 
