@@ -1,0 +1,18 @@
+# PCMFlowBluetooth — pinned upstream snapshot
+#
+# The vendored SBC codec under src/external/sbc/ is a verbatim subset of
+# ESP-IDF's components/bt/host/bluedroid/external/sbc/ (itself AOSP-derived),
+# plus generated shim headers. `tools/sync_sbc.py` reads this file to report
+# drift and rewrites it on every --apply run.
+#
+# Upstream tracking is level L0 — manual, never from CI. See SPEC.md §11.5.
+
+[sbc]
+repo     = "espressif/esp-idf"
+subdir   = "components/bt/host/bluedroid/external/sbc"
+ref      = "local"
+commit   = "08e0d30a74ad0bfd5a34933142b80f45619ee410"
+url      = "https://github.com/espressif/esp-idf/tree/08e0d30a74ad0bfd5a34933142b80f45619ee410/components/bt/host/bluedroid/external/sbc"
+license  = "Apache-2.0"
+synced   = "2026-08-11"
+# 44 verbatim files + 16 generated shim headers

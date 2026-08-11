@@ -1,0 +1,56 @@
+#######################################
+# Syntax Coloring Map for PCMFlowBluetooth
+#######################################
+
+#######################################
+# Datatypes (KEYWORD1)
+#######################################
+
+SbcDecoder	KEYWORD1
+A2dpSinkStream	KEYWORD1
+EspBleA2dpSinkAdapter	KEYWORD1
+EncodedPacketQueue	KEYWORD1
+EncodedAudioFormat	KEYWORD1
+EncodedAudioCodec	KEYWORD1
+PcmOverflowPolicy	KEYWORD1
+PCMFlowBluetoothError	KEYWORD1
+
+#######################################
+# Methods and Functions (KEYWORD2)
+#######################################
+
+begin	KEYWORD2
+end	KEYWORD2
+update	KEYWORD2
+reset	KEYWORD2
+resetCounters	KEYWORD2
+pushEncoded	KEYWORD2
+setCodecConfig	KEYWORD2
+decodeFrame	KEYWORD2
+stream	KEYWORD2
+format	KEYWORD2
+readFrames	KEYWORD2
+availableFrames	KEYWORD2
+isReady	KEYWORD2
+isEof	KEYWORD2
+connected	KEYWORD2
+streaming	KEYWORD2
+receivedPacketCount	KEYWORD2
+droppedPacketCount	KEYWORD2
+invalidFrameCount	KEYWORD2
+decodeFailureCount	KEYWORD2
+pcmOverflowFrameCount	KEYWORD2
+timestampDiscontinuityCount	KEYWORD2
+lastError	KEYWORD2
+lastErrorName	KEYWORD2
+
+#######################################
+# Constants (LITERAL1)
+#######################################
+
+Sbc	LITERAL1
+Msbc	LITERAL1
+Cvsd	LITERAL1
+DropOldest	LITERAL1
+DropNewest	LITERAL1
+PCMFLOWBLUETOOTH_VERSION_STR	LITERAL1

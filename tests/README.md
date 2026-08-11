@@ -1,0 +1,63 @@
+# Tests
+
+> 日本語版: [README.ja.md](README.ja.md)
+
+Automated test suite for PCMFlowBluetooth. Mirrors the conventions of the parent [PCMFlow test suite](https://github.com/tanakamasayuki/PCMFlow/tree/main/tests):
+
+- [pytest-embedded](https://docs.espressif.com/projects/pytest-embedded/en/latest/) + Arduino CLI backend.
+- Two profiles: `lang-ship:host` (logic verification, fast CI) and `esp32:esp32:esp32` (real hardware verification, footprint measurement).
+- Per-feature subdirectory containing `<feature>.ino`, `sketch.yaml`, `test_<feature>.py`.
+- Assertions use the `EXPECT_TRUE` / `EXPECT_EQ` / `EXPECT_NEAR` macros and the `TEST done N/M` Serial protocol.
+- Two-board hardware tests live under `peer/`, mirroring [EspBle's `tests/peer/`](https://github.com/tanakamasayuki/EspBle/tree/main/tests/peer).
+
+## Why the host profile carries most of the coverage
+
+EspBle cannot be built for the host profile — it is `architectures=esp32` and needs a Bluetooth stack. The library is therefore layered so that everything except the EspBle wiring is EspBle-independent (see [SPEC §3.1](../SPEC.md)):
+
+```
+EspBleA2dpSinkAdapter   depends on EspBle. ESP32 only. Callback wiring.
+        |
+A2dpSinkStream          EspBle-independent. Queue + decoder. PCMSource.
+        |
+SbcDecoder              EspBle-independent. SBC frames -> PCM.
+```
+
+Queue overflow, reset, invalid frames, codec reconfiguration and the `PCMSource` contract are all exercised on the host. The ESP32 tests are left to cover what only real hardware can: transport wiring, timing, footprint.
+
+## Directory layout
+
+- `smoke/` — Build sanity check. Compiles the umbrella header and prints the library version. *(implemented)*
+- *(planned)* `sbc_decoder/` — Known SBC vectors, mono/dual/stereo/joint stereo, 16/32/44.1/48 kHz, bitpool range, invalid-frame rejection and resynchronization, `reset()`.
+- *(planned)* `encoded_queue/` — Atomic per-packet storage, no partial packets, whole-packet drop on overflow, ring wrap, the `mediaMtu` lower bound.
+- *(planned)* `a2dp_sink_stream/` — Multi-frame packet iteration, old data discarded on codec reconfiguration, PCM overflow policies, every counter, `isEof()` always false.
+- *(planned)* `external_source/` — `PCMFlow::setInputSource()` → `pump()` → `readFrames()` integration.
+- *(planned)* `peer/a2dp_sbc_receive/` — Real A2DP on two boards: connect, codec configuration, sustained SBC reception, PCM decode, suspend/resume, disconnect, reconnect.
+
+## SBC test vectors
+
+`tools/gen_sbc_vectors.py` builds the vendored Broadcom SBC encoder **on the host** to produce SBC frames paired with known PCM. Building the encoder for the host only means it never collides with the `OI_CODEC_SBC_*` / `SBC_Encoder` symbols that arduino-esp32's `libbt.a` already exports (see [SPEC §11.3](../SPEC.md)).
+
+The peer side of `peer/a2dp_sbc_receive/` sends **pre-generated SBC frames embedded in PROGMEM** through `EspBleClassicA2dpSource::send()`, rather than encoding in real time. That is deterministic, so the DUT-side PCM can be checked exactly.
+
+## Two-board setup
+
+`host` and `device` identify the parent side and the second peer on pytest-embedded-cli; they do not describe A2DP roles. The DUT plays the A2DP Sink and the peer plays the A2DP Source.
+
+The port names in `.env` are shared with the EspBle and EspBleBluedroid repositories, so the same permanently wired ESP32 pair serves all of them. Serial ports are held exclusively, so concurrent runs simply wait.
+
+## Running
+
+```sh
+# host (default)
+uv run --env-file .env pytest
+
+# real ESP32
+uv run --env-file .env pytest --profile esp32
+
+# two-board hardware tests
+uv run --env-file .env pytest peer/ \
+  --profile esp32_peer_host \
+  --peer-profile device:esp32_peer_device
+```
+
+Copy `.env.example` to `.env` and adjust the serial ports for your setup.

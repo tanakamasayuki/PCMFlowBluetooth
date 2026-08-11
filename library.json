@@ -1,0 +1,26 @@
+{
+  "name": "PCMFlowBluetooth",
+  "version": "0.1.0",
+  "description": "Bluetooth Classic audio add-on for PCMFlow. Connects the encoded audio payloads handled by EspBle to PCMFlow's PCMSource / PCMSink boundary. Owns the codec, the packet queue and the PCM boundary only; Bluetooth profiles stay in EspBle and device output stays in PCMFlow / PCMFlowDevice. The initial release decodes A2DP Sink SBC into interleaved signed 16-bit PCM on the plain ESP32.",
+  "keywords": "audio, pcm, bluetooth, a2dp, sbc, codec, esp32",
+  "authors": [
+    {
+      "name": "TANAKA Masayuki",
+      "maintainer": true
+    }
+  ],
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/tanakamasayuki/PCMFlowBluetooth.git"
+  },
+  "license": "MIT",
+  "frameworks": "arduino",
+  "platforms": "*",
+  "dependencies": [
+    {
+      "name": "PCMFlow",
+      "version": ">=0.2.1"
+    }
+  ],
+  "headers": "PCMFlowBluetooth.h"
+}
