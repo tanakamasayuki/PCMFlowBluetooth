@@ -1,3 +1,9 @@
+/* NOTICE: Modified by PCMFlowBluetooth (tools/sync_sbc.py).
+ * 32-bit integer typedefs changed from `long` to fixed-width types so the
+ * codec is correct on 64-bit hosts. No-op on 32-bit targets such as the
+ * ESP32. See ../../../LICENSE_sbc.md.
+ */
+#include <stdint.h>
 /******************************************************************************
  *
  *  Copyright (C) 2014 The Android Open Source Project
@@ -118,10 +124,10 @@ typedef unsigned char   OI_BYTE;  /**< Raw bytes type uses native character data
  */
 typedef signed char     OI_INT8;   /**< 8-bit signed integer values use native signed character data type for x86 processor. */
 typedef signed short    OI_INT16;  /**< 16-bit signed integer values use native signed short integer data type for x86 processor. */
-typedef signed long     OI_INT32;  /**< 32-bit signed integer values use native signed long integer data type for x86 processor. */
+typedef int32_t         OI_INT32;  /**< 32-bit signed integer values use native signed long integer data type for x86 processor. */
 typedef unsigned char   OI_UINT8;  /**< 8-bit unsigned integer values use native unsigned character data type for x86 processor. */
 typedef unsigned short  OI_UINT16; /**< 16-bit unsigned integer values use native unsigned short integer data type for x86 processor. */
-typedef unsigned long   OI_UINT32; /**< 32-bit unsigned integer values use native unsigned long integer data type for x86 processor. */
+typedef uint32_t        OI_UINT32; /**< 32-bit unsigned integer values use native unsigned long integer data type for x86 processor. */
 
 typedef OI_UINT32 OI_ELEMENT_UNION; /**< Type for first element of a union to support all data types up to pointer width. */
 
@@ -164,10 +170,10 @@ typedef OI_UINT32 OI_ELEMENT_UNION; /**< Type for first element of a union to su
 
 typedef signed char     OI_INT8;   /**< 8-bit signed integer values use native signed character data type for SH-3 processor. */
 typedef signed short    OI_INT16;  /**< 16-bit signed integer values use native signed short integer data type for SH-3 processor. */
-typedef signed long     OI_INT32;  /**< 32-bit signed integer values use native signed long integer data type for SH-3 processor. */
+typedef int32_t         OI_INT32;  /**< 32-bit signed integer values use native signed long integer data type for SH-3 processor. */
 typedef unsigned char   OI_UINT8;  /**< 8-bit unsigned integer values use native unsigned character data type for SH-3 processor. */
 typedef unsigned short  OI_UINT16; /**< 16-bit unsigned integer values use native unsigned short integer data type for SH-3 processor. */
-typedef unsigned long   OI_UINT32; /**< 32-bit unsigned integer values use native unsigned long integer data type for SH-3 processor. */
+typedef uint32_t        OI_UINT32; /**< 32-bit unsigned integer values use native unsigned long integer data type for SH-3 processor. */
 
 typedef OI_UINT32 OI_ELEMENT_UNION; /**< Type for first element of a union to support all data types up to pointer width. */
 
@@ -186,10 +192,10 @@ typedef OI_UINT32 OI_ELEMENT_UNION; /**< Type for first element of a union to su
 
 typedef signed char     OI_INT8;   /**< 8-bit signed integer values use native signed character data type for SH-2 processor. */
 typedef signed short    OI_INT16;  /**< 16-bit signed integer values use native signed short integer data type for SH-2 processor. */
-typedef signed long     OI_INT32;  /**< 32-bit signed integer values use native signed long integer data type for SH-2 processor. */
+typedef int32_t         OI_INT32;  /**< 32-bit signed integer values use native signed long integer data type for SH-2 processor. */
 typedef unsigned char   OI_UINT8;  /**< 8-bit unsigned integer values use native unsigned character data type for SH-2 processor. */
 typedef unsigned short  OI_UINT16; /**< 16-bit unsigned integer values use native unsigned short integer data type for SH-2 processor. */
-typedef unsigned long   OI_UINT32; /**< 32-bit unsigned integer values use native unsigned long integer data type for SH-2 processor. */
+typedef uint32_t        OI_UINT32; /**< 32-bit unsigned integer values use native unsigned long integer data type for SH-2 processor. */
 
 typedef OI_UINT32 OI_ELEMENT_UNION; /**< Type for first element of a union to support all data types up to pointer width. */
 
@@ -212,10 +218,10 @@ typedef OI_UINT32 OI_ELEMENT_UNION; /**< Type for first element of a union to su
  */
 typedef signed char     OI_INT8;   /**< 8-bit signed integer values use native signed character data type for ARM7 processor. */
 typedef signed short    OI_INT16;  /**< 16-bit signed integer values use native signed short integer data type for ARM7 processor. */
-typedef signed long     OI_INT32;  /**< 32-bit signed integer values use native signed long integer data type for ARM7 processor. */
+typedef int32_t         OI_INT32;  /**< 32-bit signed integer values use native signed long integer data type for ARM7 processor. */
 typedef unsigned char   OI_UINT8;  /**< 8-bit unsigned integer values use native unsigned character data type for ARM7 processor. */
 typedef unsigned short  OI_UINT16; /**< 16-bit unsigned integer values use native unsigned short integer data type for ARM7 processor. */
-typedef unsigned long   OI_UINT32; /**< 32-bit unsigned integer values use native unsigned long integer data type for ARM7 processor. */
+typedef uint32_t        OI_UINT32; /**< 32-bit unsigned integer values use native unsigned long integer data type for ARM7 processor. */
 
 typedef OI_UINT32 OI_ELEMENT_UNION; /**< Type for first element of a union to support all data types up to pointer width. */
 
@@ -241,10 +247,10 @@ typedef OI_UINT32 OI_ELEMENT_UNION; /**< Type for first element of a union to su
 
 typedef signed char     OI_INT8;   /**< 8-bit signed integer values use native signed character data type for M68000 processor. */
 typedef signed short    OI_INT16;  /**< 16-bit signed integer values use native signed short integer data type for M68000 processor. */
-typedef signed long     OI_INT32;  /**< 32-bit signed integer values use native signed long integer data type for M68000 processor. */
+typedef int32_t         OI_INT32;  /**< 32-bit signed integer values use native signed long integer data type for M68000 processor. */
 typedef unsigned char   OI_UINT8;  /**< 8-bit unsigned integer values use native unsigned character data type for M68000 processor. */
 typedef unsigned short  OI_UINT16; /**< 16-bit unsigned integer values use native unsigned short integer data type for M68000 processor. */
-typedef unsigned long   OI_UINT32; /**< 32-bit unsigned integer values use native unsigned long integer data type for M68000 processor. */
+typedef uint32_t        OI_UINT32; /**< 32-bit unsigned integer values use native unsigned long integer data type for M68000 processor. */
 
 typedef OI_UINT32 OI_ELEMENT_UNION; /**< Type for first element of a union to support all data types up to pointer width. */
 
@@ -264,10 +270,10 @@ typedef OI_UINT32 OI_ELEMENT_UNION; /**< Type for first element of a union to su
 
 typedef signed char     OI_INT8;   /**< 8-bit signed integer values use native signed character data type for PPC8XX processor. */
 typedef signed short    OI_INT16;  /**< 16-bit signed integer values use native signed short integer data type for PPC8XX processor. */
-typedef signed long     OI_INT32;  /**< 32-bit signed integer values use native signed long integer data type for PPC8XX processor. */
+typedef int32_t         OI_INT32;  /**< 32-bit signed integer values use native signed long integer data type for PPC8XX processor. */
 typedef unsigned char   OI_UINT8;  /**< 8-bit unsigned integer values use native unsigned character data type for PPC8XX processor. */
 typedef unsigned short  OI_UINT16; /**< 16-bit unsigned integer values use native unsigned short integer data type for PPC8XX processor. */
-typedef unsigned long   OI_UINT32; /**< 32-bit unsigned integer values use native unsigned long integer data type for PPC8XX processor. */
+typedef uint32_t        OI_UINT32; /**< 32-bit unsigned integer values use native unsigned long integer data type for PPC8XX processor. */
 
 typedef OI_UINT32 OI_ELEMENT_UNION; /**< Type for first element of a union to support all data types up to pointer width. */
 
@@ -286,10 +292,10 @@ typedef OI_UINT32 OI_ELEMENT_UNION; /**< Type for first element of a union to su
 
 typedef signed char     OI_INT8;   /**< 8-bit signed integer values use native signed character data type for SH7750 SH-4 processor. */
 typedef signed short    OI_INT16;  /**< 16-bit signed integer values use native signed short integer data type for SH7750 SH-4 processor. */
-typedef signed long     OI_INT32;  /**< 32-bit signed integer values use native signed long integer data type for SH7750 SH-4 processor. */
+typedef int32_t         OI_INT32;  /**< 32-bit signed integer values use native signed long integer data type for SH7750 SH-4 processor. */
 typedef unsigned char   OI_UINT8;  /**< 8-bit unsigned integer values use native unsigned character data type for SH7750 SH-4 processor. */
 typedef unsigned short  OI_UINT16; /**< 16-bit unsigned integer values use native unsigned short integer data type for SH7750 SH-4 processor. */
-typedef unsigned long   OI_UINT32; /**< 32-bit unsigned integer values use native unsigned long integer data type for SH7750 SH-4 processor. */
+typedef uint32_t        OI_UINT32; /**< 32-bit unsigned integer values use native unsigned long integer data type for SH7750 SH-4 processor. */
 
 typedef OI_UINT32 OI_ELEMENT_UNION; /**< Type for first element of a union to support all data types up to pointer width. */
 
@@ -308,10 +314,10 @@ typedef OI_UINT32 OI_ELEMENT_UNION; /**< Type for first element of a union to su
 
 typedef signed char     OI_INT8;   /**< 8-bit signed integer values use native signed character data type for ARM7 processor. */
 typedef signed short    OI_INT16;  /**< 16-bit signed integer values use native signed short integer data type for ARM7 processor. */
-typedef signed long     OI_INT32;  /**< 32-bit signed integer values use native signed long integer data type for ARM7 processor. */
+typedef int32_t         OI_INT32;  /**< 32-bit signed integer values use native signed long integer data type for ARM7 processor. */
 typedef unsigned char   OI_UINT8;  /**< 8-bit unsigned integer values use native unsigned character data type for ARM7 processor. */
 typedef unsigned short  OI_UINT16; /**< 16-bit unsigned integer values use native unsigned short integer data type for ARM7 processor. */
-typedef unsigned long   OI_UINT32; /**< 32-bit unsigned integer values use native unsigned long integer data type for ARM7 processor. */
+typedef uint32_t        OI_UINT32; /**< 32-bit unsigned integer values use native unsigned long integer data type for ARM7 processor. */
 
 typedef void *OI_ELEMENT_UNION;  /**< Type for first element of a union to support all data types up to pointer width. */
 
@@ -328,10 +334,10 @@ typedef void *OI_ELEMENT_UNION;  /**< Type for first element of a union to suppo
  */
 typedef signed char     OI_INT8;   /**< 8-bit signed integer values use native signed character data type for ARM7 processor. */
 typedef signed short    OI_INT16;  /**< 16-bit signed integer values use native signed short integer data type for ARM7 processor. */
-typedef signed long     OI_INT32;  /**< 32-bit signed integer values use native signed long integer data type for ARM7 processor. */
+typedef int32_t         OI_INT32;  /**< 32-bit signed integer values use native signed long integer data type for ARM7 processor. */
 typedef unsigned char   OI_UINT8;  /**< 8-bit unsigned integer values use native unsigned character data type for ARM7 processor. */
 typedef unsigned short  OI_UINT16; /**< 16-bit unsigned integer values use native unsigned short integer data type for ARM7 processor. */
-typedef unsigned long   OI_UINT32; /**< 32-bit unsigned integer values use native unsigned long integer data type for ARM7 processor. */
+typedef uint32_t        OI_UINT32; /**< 32-bit unsigned integer values use native unsigned long integer data type for ARM7 processor. */
 
 typedef void *OI_ELEMENT_UNION;  /**< Type for first element of a union to support all data types up to pointer width. */
 
@@ -346,10 +352,10 @@ typedef void *OI_ELEMENT_UNION;  /**< Type for first element of a union to suppo
 
 typedef signed char     OI_INT8;   /**< 8-bit signed integer. */
 typedef signed short    OI_INT16;  /**< 16-bit signed integer. */
-typedef signed long     OI_INT32;  /**< 32-bit signed integer. */
+typedef int32_t         OI_INT32;  /**< 32-bit signed integer. */
 typedef unsigned char   OI_UINT8;  /**< 8-bit unsigned integer. */
 typedef unsigned short  OI_UINT16; /**< 16-bit unsigned integer. */
-typedef unsigned long   OI_UINT32; /**< 32-bit unsigned integer. */
+typedef uint32_t        OI_UINT32; /**< 32-bit unsigned integer. */
 
 typedef OI_UINT32 OI_ELEMENT_UNION; /**< Type for first element of a union to support all data types up to pointer width. */
 
@@ -367,10 +373,10 @@ typedef OI_UINT32 OI_ELEMENT_UNION; /**< Type for first element of a union to su
 
 typedef signed char     OI_INT8;   /**< 8-bit signed integer values use native signed character data type for ARC processor. */
 typedef signed short    OI_INT16;  /**< 16-bit signed integer values use native signed short integer data type for ARC processor. */
-typedef signed long     OI_INT32;  /**< 32-bit signed integer values use native signed long integer data type for ARC processor. */
+typedef int32_t         OI_INT32;  /**< 32-bit signed integer values use native signed long integer data type for ARC processor. */
 typedef unsigned char   OI_UINT8;  /**< 8-bit unsigned integer values use native unsigned character data type for ARC processor. */
 typedef unsigned short  OI_UINT16; /**< 16-bit unsigned integer values use native unsigned short integer data type for ARC processor. */
-typedef unsigned long   OI_UINT32; /**< 32-bit unsigned integer values use native unsigned long integer data type for ARC processor. */
+typedef uint32_t        OI_UINT32; /**< 32-bit unsigned integer values use native unsigned long integer data type for ARC processor. */
 
 typedef OI_UINT32 OI_ELEMENT_UNION; /**< Type for first element of a union to support all data types up to pointer width. */
 
@@ -389,10 +395,10 @@ typedef OI_UINT32 OI_ELEMENT_UNION; /**< Type for first element of a union to su
 
 typedef signed char     OI_INT8;   /**< 8-bit signed integer values use native signed character data type for ARC processor. */
 typedef signed short    OI_INT16;  /**< 16-bit signed integer values use native signed short integer data type for ARC processor. */
-typedef signed long     OI_INT32;  /**< 32-bit signed integer values use native signed long integer data type for ARC processor. */
+typedef int32_t         OI_INT32;  /**< 32-bit signed integer values use native signed long integer data type for ARC processor. */
 typedef unsigned char   OI_UINT8;  /**< 8-bit unsigned integer values use native unsigned character data type for ARC processor. */
 typedef unsigned short  OI_UINT16; /**< 16-bit unsigned integer values use native unsigned short integer data type for ARC processor. */
-typedef unsigned long   OI_UINT32; /**< 32-bit unsigned integer values use native unsigned long integer data type for ARC processor. */
+typedef uint32_t        OI_UINT32; /**< 32-bit unsigned integer values use native unsigned long integer data type for ARC processor. */
 
 typedef OI_UINT32 OI_ELEMENT_UNION; /**< Type for first element of a union to support all data types up to pointer width. */
 
@@ -411,10 +417,10 @@ typedef OI_UINT32 OI_ELEMENT_UNION; /**< Type for first element of a union to su
 
 typedef signed char     OI_INT8;   /**< 8-bit signed integer values use native signed character data type for M308 processor. */
 typedef signed short    OI_INT16;  /**< 16-bit signed integer values use native signed short integer data type for M308 processor. */
-typedef signed long     OI_INT32;  /**< 32-bit signed integer values use native signed long integer data type for M308 processor. */
+typedef int32_t         OI_INT32;  /**< 32-bit signed integer values use native signed long integer data type for M308 processor. */
 typedef unsigned char   OI_UINT8;  /**< 8-bit unsigned integer values use native unsigned character data type for M308 processor. */
 typedef unsigned short  OI_UINT16; /**< 16-bit unsigned integer values use native unsigned short integer data type for M308 processor. */
-typedef unsigned long   OI_UINT32; /**< 32-bit unsigned integer values use native unsigned long integer data type for M308 processor. */
+typedef uint32_t        OI_UINT32; /**< 32-bit unsigned integer values use native unsigned long integer data type for M308 processor. */
 
 typedef OI_UINT32 OI_ELEMENT_UNION; /**< Type for first element of a union to support all data types up to pointer width. */
 
@@ -433,10 +439,10 @@ typedef OI_UINT32 OI_ELEMENT_UNION; /**< Type for first element of a union to su
 
 typedef signed char     OI_INT8;   /**< 8-bit signed integer values use native signed character data type for CR16C processor. */
 typedef signed short    OI_INT16;  /**< 16-bit signed integer values use native signed short integer data type for CR16C processor. */
-typedef signed long     OI_INT32;  /**< 32-bit signed integer values use native signed long integer data type for CR16C processor. */
+typedef int32_t         OI_INT32;  /**< 32-bit signed integer values use native signed long integer data type for CR16C processor. */
 typedef unsigned char   OI_UINT8;  /**< 8-bit unsigned integer values use native unsigned character data type for CR16C processor. */
 typedef unsigned short  OI_UINT16; /**< 16-bit unsigned integer values use native unsigned short integer data type for CR16C processor. */
-typedef unsigned long   OI_UINT32; /**< 32-bit unsigned integer values use native unsigned long integer data type for CR16C processor. */
+typedef uint32_t        OI_UINT32; /**< 32-bit unsigned integer values use native unsigned long integer data type for CR16C processor. */
 
 typedef OI_UINT32 OI_ELEMENT_UNION; /**< Type for first element of a union to support all data types up to pointer width. */
 
@@ -455,10 +461,10 @@ typedef OI_UINT32 OI_ELEMENT_UNION; /**< Type for first element of a union to su
 
 typedef signed char     OI_INT8;   /**< 8-bit signed integer values use native signed character data type for M64111 processor. */
 typedef signed short    OI_INT16;  /**< 16-bit signed integer values use native signed short integer data type for M64111 processor. */
-typedef signed long     OI_INT32;  /**< 32-bit signed integer values use native signed long integer data type for M64111 processor. */
+typedef int32_t         OI_INT32;  /**< 32-bit signed integer values use native signed long integer data type for M64111 processor. */
 typedef unsigned char   OI_UINT8;  /**< 8-bit unsigned integer values use native unsigned character data type for M64111 processor. */
 typedef unsigned short  OI_UINT16; /**< 16-bit unsigned integer values use native unsigned short integer data type for M64111 processor. */
-typedef unsigned long   OI_UINT32; /**< 32-bit unsigned integer values use native unsigned long integer data type for M64111 processor. */
+typedef uint32_t        OI_UINT32; /**< 32-bit unsigned integer values use native unsigned long integer data type for M64111 processor. */
 
 typedef OI_UINT32 OI_ELEMENT_UNION; /**< Type for first element of a union to support all data types up to pointer width. */
 
@@ -476,10 +482,10 @@ typedef OI_UINT32 OI_ELEMENT_UNION; /**< Type for first element of a union to su
 
 typedef signed char     OI_INT8;   /**< 8-bit signed integer values use native signed character data type for ARM7 processor. */
 typedef signed short    OI_INT16;  /**< 16-bit signed integer values use native signed short integer data type for ARM7 processor. */
-typedef signed long     OI_INT32;  /**< 32-bit signed integer values use native signed long integer data type for ARM7 processor. */
+typedef int32_t         OI_INT32;  /**< 32-bit signed integer values use native signed long integer data type for ARM7 processor. */
 typedef unsigned char   OI_UINT8;  /**< 8-bit unsigned integer values use native unsigned character data type for ARM7 processor. */
 typedef unsigned short  OI_UINT16; /**< 16-bit unsigned integer values use native unsigned short integer data type for ARM7 processor. */
-typedef unsigned long   OI_UINT32; /**< 32-bit unsigned integer values use native unsigned long integer data type for ARM7 processor. */
+typedef uint32_t        OI_UINT32; /**< 32-bit unsigned integer values use native unsigned long integer data type for ARM7 processor. */
 
 typedef OI_UINT32 OI_ELEMENT_UNION; /**< Type for first element of a union to support all data types up to pointer width. */
 

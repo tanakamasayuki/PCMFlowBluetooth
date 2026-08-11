@@ -24,6 +24,8 @@
 #include "pcmflowbluetooth_version.h"
 
 #include "EncodedAudioFormat.h"
+#include "EncodedPacketQueue.h"
+#include "SbcDecoder.h"
 
 // The EspBle adapter is compiled only where Classic Bluetooth exists.
 // Including this umbrella header on any other target is fine: the core

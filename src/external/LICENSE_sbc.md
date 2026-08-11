@@ -19,10 +19,26 @@ NOTICE and the record of modifications that Apache-2.0 §4 requires.
 
 ## Modifications
 
-Apache-2.0 §4(b) requires that modified files carry prominent notices. **No
-vendored file is modified** — every file under `src/external/sbc/` is
-byte-for-byte identical to upstream. The two adaptations this library needs
-are made entirely from the outside:
+Apache-2.0 §4(b) requires that modified files carry prominent notices. Two
+files are modified; both carry a notice at the top, and both changes are
+applied by `tools/sync_sbc.py` rather than by hand, so the tree stays
+reproducible from upstream plus a declared patch.
+
+| File | Change |
+|---|---|
+| `sbc/decoder/include/oi_cpu_dep.h` | `OI_INT32` / `OI_UINT32` typedef'd from `int32_t` / `uint32_t` instead of `signed long` / `unsigned long` |
+| `sbc/encoder/include/sbc_types.h` | `SINT32` typedef'd from `int32_t` instead of `long` |
+
+The codec's fixed-point arithmetic assumes `long` is 32 bits. That holds on
+every target it was written for, including the ESP32 (ILP32), but not on a
+64-bit host, where these types silently become 64-bit and the decoder emits
+noise instead of audio — with the frame headers still parsing correctly, so
+the failure is silent. The change is a no-op on 32-bit targets and is what
+lets the codec be verified by the host test suite.
+
+Every other file under `src/external/sbc/` is byte-for-byte identical to
+upstream. The two further adaptations this library needs are made entirely
+from the outside, without touching any vendored file:
 
 1. **Build configuration.** Upstream includes Bluedroid's
    `common/bt_target.h`. `tools/sync_sbc.py` generates a shim at each such

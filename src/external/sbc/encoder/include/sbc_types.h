@@ -1,3 +1,9 @@
+/* NOTICE: Modified by PCMFlowBluetooth (tools/sync_sbc.py).
+ * 32-bit integer typedefs changed from `long` to fixed-width types so the
+ * codec is correct on 64-bit hosts. No-op on 32-bit targets such as the
+ * ESP32. See ../../../LICENSE_sbc.md.
+ */
+#include <stdint.h>
 /******************************************************************************
  *
  *  Copyright (C) 1999-2012 Broadcom Corporation
@@ -34,7 +40,7 @@
 #include "stack/bt_types.h"
 
 typedef short SINT16;
-typedef long SINT32;
+typedef int32_t SINT32;
 
 #if (SBC_IPAQ_OPT == TRUE)
 

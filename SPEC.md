@@ -372,6 +372,8 @@ Apache-2.0 is compatible with MIT. The library itself ships under MIT with the v
 
 The initial release actually builds only `decoder/`. `encoder/` and `plc/` are fetched from the same snapshot for the later phases (§15) but are excluded from compilation.
 
+**One upstream patch is required, applied by `tools/sync_sbc.py`.** The codec's fixed-point arithmetic assumes `long` is 32 bits — true on every target it was written for, including the ESP32 (ILP32), but false on a 64-bit host, where `OI_INT32` / `OI_UINT32` / `SINT32` silently become 64-bit. The frame headers still parse correctly and the frame lengths still come out right, so the decoder looks like it is working while emitting noise. Three typedefs are changed to fixed-width types, which is a no-op on 32-bit targets and is what makes the host test suite able to verify the codec at all. Each patched file carries the notice Apache-2.0 §4(b) requires; see `src/external/LICENSE_sbc.md`. A substitution that stops matching upstream is a hard error in `sync_sbc.py` rather than a silent skip.
+
 ### 11.2 Rejected alternatives
 
 | Candidate | Reason for rejection |
