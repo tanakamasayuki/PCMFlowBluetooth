@@ -186,14 +186,22 @@ public:
 };
 ```
 
+**有効化条件。** このアダプタが宣言されるのは、`ARDUINO_ARCH_ESP32` と `CONFIG_IDF_TARGET_ESP32` が成立し、**かつ** `<EspBleClassic.h>` が存在する場合だけである。EspBle の Classic 対応はまだリリースに入っていないため、素の EspBle をインストールした環境ではアダプタは存在しない。これは Classic 非搭載 SoC 向けにビルドした場合と同じ結果であり、コンパイルは通るのに無音を返すスタブよりも望ましい。どちらの状態かは `PCMFLOWBLUETOOTH_HAS_ESPBLE_ADAPTER` で判別できる。なお判定に使う `CONFIG_IDF_TARGET_ESP32` はライブラリの `.cpp` には `<Arduino.h>` 経由でしか届かないため、ヘッダで明示的にインクルードしている。
+
 - `begin()` は `onMedia` / `onCodecConfigured` / `onStreamStateChanged` / `onDisconnected` を登録する。**Bluetooth スタックやプロファイルの開始は所有しない** — 利用者が先に `EspBleClassic` と `EspBleClassicA2dpSink::begin()` を呼ぶ。
 - `end()` は先に `onMedia({})` を呼んでメディアコールバックを解除し、実行中のコールバックの完了を待ってから内部リソースを解放する。EspBle スタックは停止しない。
 - `update()` は EspBle の制御イベント配送(`EspBleClassic::update()`)とは独立で、デコードを進める。利用者ループまたは専用タスクから呼ぶ。
-- 初期実装は **単一 A2DP 接続**のみ受け付ける。2 本目の接続の payload は捨て、`droppedPacketCount()` を進める。
+- 初期実装は **単一 A2DP 接続**のみ受け付ける。2 本目の接続の payload は捨て、`foreignConnectionPacketCount()` を進める。
+- EspBle は制御イベントを再送しないため、`begin()` は `connected()` / `codecConfig()` を直接問い合わせる。接続後にアタッチされたアダプタが、既に発火済みのイベントを待ち続けてはならない。
+- ネゴシエートされたメディア MTU が設定した `maximumPacketBytes` を超えることがあり、その場合フルサイズのパケットが到着のたびに捨てられてしまう。`onConnected` はそれを検出してストリームを再構成する(制御パスでの再確保)。
 
 ### 4.4 PCMFlow パイプラインへの接続
 
 ```cpp
+#include <EspBleClassic.h>
+#include <PCMFlow.h>
+#include <PCMFlowBluetooth.h>
+
 EspBleClassic classic;
 EspBleA2dpSinkAdapter a2dp;
 PCMFlow audio;
@@ -503,7 +511,8 @@ NBS/CVSDは8 kHz、mono、signed 16-bit PCMとする。CVSDのencode/decode back
 `UnsupportedCodec`を返して開始を拒否し、mSBCへ偽装fallbackしない。CVSDのpacket長は固定値を仮定せず、
 `preferredFrameSize`と受信view境界を使う。EspBleのAGは`preferredAudioCodec=Cvsd`で標準codec negotiationを
 選択でき、ESP32同士の実機probeでは両roleとも`preferredFrameSize=120`、120-byte受信viewだった。SCOを切断し
-同一call中に再接続した場合もcodecとframe sizeを接続eventから取り直す。120 byteは観測値であり固定定数にしない。
+同一call中に再接続した場合や、SLC切断・再接続後の新しいcallでもcodecとframe sizeを接続eventから取り直す。
+120 byteは観測値であり固定定数にしない。
 
 `send()`の`Accepted`はBluedroidへbuffer ownershipが移ったことだけを示し、controller送信完了を意味しない。
 `WouldBlock`は現状local allocation failureである。uplinkは`Accepted`時だけPCM/frameを消費し、`WouldBlock`では

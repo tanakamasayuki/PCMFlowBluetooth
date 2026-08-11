@@ -106,6 +106,11 @@ public:
 
     const EncodedAudioFormat &codecConfig() const { return codecConfig_; }
 
+    // The configuration begin() was given. Useful for adjusting one field
+    // and starting over — which is what the EspBle adapter does when the
+    // negotiated media MTU turns out larger than the configured maximum.
+    const Config &config() const { return config_; }
+
     // Discard all buffered data and reset the decoder, keeping the current
     // codec configuration. Call it when a stream stops or a peer
     // disconnects, so nothing from the old session survives into the next.

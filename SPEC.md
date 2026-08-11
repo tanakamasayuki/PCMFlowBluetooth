@@ -186,14 +186,22 @@ public:
 };
 ```
 
+**Availability.** The adapter is declared only when `ARDUINO_ARCH_ESP32` and `CONFIG_IDF_TARGET_ESP32` hold *and* `<EspBleClassic.h>` is present. EspBle's Classic support is not in a published release yet, so on a stock EspBle install the adapter simply does not exist — which is the same outcome as building for an SoC without a Classic radio, and is preferable to a stub that compiles and produces silence. `PCMFLOWBLUETOOTH_HAS_ESPBLE_ADAPTER` reports which case applies. The guard tests `CONFIG_IDF_TARGET_ESP32`, which reaches a library `.cpp` only through `<Arduino.h>`; the header includes it for that reason.
+
 - `begin()` registers `onMedia` / `onCodecConfigured` / `onStreamStateChanged` / `onDisconnected`. It **does not own the Bluetooth stack or profile startup** — the user calls `EspBleClassic` and `EspBleClassicA2dpSink::begin()` first.
 - `end()` first calls `onMedia({})` to unregister the media callback, waits for any in-flight callback to finish, then releases internal resources. It does not stop the EspBle stack.
 - `update()` advances decoding, independently of EspBle's control-event dispatch (`EspBleClassic::update()`). Call it from the user loop or a dedicated task.
-- The initial implementation accepts a **single A2DP connection**. Payloads from a second connection are dropped and counted in `droppedPacketCount()`.
+- The initial implementation accepts a **single A2DP connection**. Payloads from a second connection are dropped and counted in `foreignConnectionPacketCount()`.
+- Control events are not replayed by EspBle, so `begin()` queries `connected()` / `codecConfig()` directly. An adapter attached after the peer connected must not wait for an event that has already fired.
+- The negotiated media MTU can exceed the configured `maximumPacketBytes`, in which case every full-size packet would be dropped on arrival. `onConnected` grows the stream to fit instead — a control-path reallocation.
 
 ### 4.4 PCMFlow pipeline integration
 
 ```cpp
+#include <EspBleClassic.h>
+#include <PCMFlow.h>
+#include <PCMFlowBluetooth.h>
+
 EspBleClassic classic;
 EspBleA2dpSinkAdapter a2dp;
 PCMFlow audio;
@@ -511,8 +519,9 @@ as a fallback. CVSD packet size follows the negotiated preferred frame size and
 received view boundaries instead of a hard-coded length. EspBle's AG selects the
 standard negotiation with `preferredAudioCodec=Cvsd`; an ESP32-to-ESP32 probe
 reported `preferredFrameSize=120` and 120-byte receive views on both roles, also
-after disconnecting and reconnecting SCO within the same call. That size is an
-observation, not a constant.
+after reconnecting SCO within the same call and after a full SLC reconnect into
+a new call. Adapters reacquire codec and frame size from each connection event.
+That size is an observation, not a constant.
 
 `send()` returning `Accepted` means only that Bluedroid took buffer ownership,
 not that the controller transmitted it. `WouldBlock` currently means local
