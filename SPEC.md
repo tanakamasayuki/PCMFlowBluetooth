@@ -91,6 +91,7 @@ public:
 - The output format is determined by **the SBC bitstream header**. The negotiated `EspBleClassicA2dpCodecConfig` is used for validation and to report `format()` early, but the frame header is authoritative for decoding.
 - One call handles exactly one frame. Iterating over a multi-frame packet is `A2dpSinkStream`'s job.
 - Heap allocation happens only in `begin()`. `decodeFrame()` never touches the heap.
+- `reset()` must leave the decoder in a **bit-identical** starting state, every time. The backend's own reset rebuilds pointers into the scratch area but does not clear the synthesis filter buffers held there, so `reset()` zeroes the whole area itself. Without that, a resumed stream inherits the previous one's filter history — and the very first stream inherits whatever `malloc()` returned, which is how the same SBC input decodes to different PCM on different runs. The contract is that a fresh `begin()`, a `reset()` after a suspend, and a `reset()` after a reconnect all produce the same samples from the same input; `tests/sbc_decoder/` asserts it by hash, and `tests/peer/a2dp_sbc_receive/` asserts it end-to-end on hardware.
 
 ### 4.2 `A2dpSinkStream` — implements `PCMSource`
 

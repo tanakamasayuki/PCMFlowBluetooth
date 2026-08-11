@@ -293,6 +293,28 @@ static void test_reset_restores_state()
     // still decode every frame.
     const DecodeResult third = decode_all(dec, kSbcVectors[0]);
     EXPECT_EQ("continues-without-reset", first.framesDecoded, third.framesDecoded);
+
+    // A decoder that has only just been begun must start from the same state
+    // as a reset one. This is a separate instance on purpose: its scratch
+    // area is a fresh allocation, so anything left in the heap by the
+    // decoder above would show up here as a different startup transient.
+    // The backend's own reset does not clear that area — SbcDecoder::reset()
+    // has to, and this is what proves it.
+    SbcDecoder fresh;
+    fresh.begin();
+    const DecodeResult afterBegin = decode_all(fresh, kSbcVectors[0]);
+    EXPECT_EQ("begin-matches-reset-samples", first.hash, afterBegin.hash);
+    EXPECT_EQ("begin-matches-reset-peak", first.peak, afterBegin.peak);
+    EXPECT_EQ("begin-matches-reset-pcm", first.pcmFrames, afterBegin.pcmFrames);
+
+    // And a decoder reset to a different channel count and back must also
+    // land on the same state — reconfiguration is the other path that
+    // reaches reset() in a live stream.
+    dec.reset(1);
+    (void)decode_all(dec, kSbcVectors[0]);
+    dec.reset(2);
+    const DecodeResult afterReconfigure = decode_all(dec, kSbcVectors[0]);
+    EXPECT_EQ("reconfigure-matches-reset-samples", first.hash, afterReconfigure.hash);
 }
 
 static void test_rejects_bad_arguments()
